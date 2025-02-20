@@ -1,0 +1,12 @@
+[
+    {
+      "taskName": "Play Game",
+      "timeSpent": 60,
+      "type": "Gaming Session"
+    },
+    {
+      "taskName": "Study Math",
+      "timeSpent": 120,
+      "type": "Study Session"
+    }
+  ]
