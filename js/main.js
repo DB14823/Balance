@@ -140,21 +140,32 @@ $(document).ready(function () {
   });
 
   $("#saveToCalendar").click(function () {
-    const selectedDate = $("#dateDropdown").val();
+    const selectedDate = $("#datePicker").val();
     if (!selectedDate) {
       alert("Please select a date!");
       return;
     }
   
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString(undefined, options);
+    };
+  
+    const formattedDate = formatDate(selectedDate);
+  
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
   
     $("#gamingTableBody tr, #studyTableBody tr").each(function () {
       const taskName = $(this).find("td:first").text();
-      const timeSpent = parseFloat($(this).find("td:nth-child(2)").text());
-      const tableId = $(this).closest("tbody").attr("id"); 
-      const type = tableId === "gamingTableBody" ? "Gaming Session" : "Study Session"; 
+      const timeSpentText = $(this).find("td:nth-child(2)").text();
+      const tableId = $(this).closest("tbody").attr("id");
+      const type = tableId === "gamingTableBody" ? "Gaming Session" : "Study Session";
   
-      const existingTaskIndex = tasks.findIndex(task => 
+      const [minutes, seconds] = timeSpentText.split(":").map(Number);
+      const timeSpent = minutes + seconds / 60;
+  
+      const existingTaskIndex = tasks.findIndex(task =>
         task.taskName === taskName &&
         task.timeSpent === timeSpent &&
         task.type === type
@@ -175,6 +186,6 @@ $(document).ready(function () {
     });
   
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    alert(`Tasks have been saved to ${selectedDate}!`);
+    alert(`Tasks have been saved to ${formattedDate}!`);
   });
 });

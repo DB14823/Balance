@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
   let timer1, timer2;
   let startTime1, startTime2;

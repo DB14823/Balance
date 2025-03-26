@@ -1,6 +1,6 @@
 $(document).ready(function () {
   let currentYear = new Date().getFullYear();
-  let currentMonth = new Date().getMonth(); 
+  let currentMonth = new Date().getMonth();
 
   function generateCalendar(year, month) {
     const calendar = $("#calendar");
@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1).getDay(); 
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
 
     daysOfWeek.forEach(day => {
       calendar.append(`<div class="day header">${day}</div>`);
@@ -39,9 +39,7 @@ $(document).ready(function () {
 
   function showDayDetails(selectedDate) {
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  
     const tasksForDay = tasks.filter(task => task.deadline === selectedDate);
-  
     let totalGamingTime = 0;
     let totalStudyTime = 0;
   
@@ -58,30 +56,42 @@ $(document).ready(function () {
       return;
     }
   
+    const formatTime = (decimalTime) => {
+      const hours = Math.floor(decimalTime);
+      const minutes = Math.round((decimalTime - hours) * 60);
+      return `${hours} hours and ${minutes} minutes`;
+    };
+  
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString(undefined, options);
+    };
+  
+    const totalGamingTimeFormatted = formatTime(totalGamingTime);
+    const totalStudyTimeFormatted = formatTime(totalStudyTime);
+  
     const totalTime = totalGamingTime + totalStudyTime;
     const gamingPercentage = totalTime > 0 ? ((totalGamingTime / totalTime) * 100).toFixed(2) : 0;
     const studyPercentage = totalTime > 0 ? ((totalStudyTime / totalTime) * 100).toFixed(2) : 0;
+  
+    const formattedDate = formatDate(selectedDate);
   
     const modalContent = `
       <div class="modal-overlay">
         <div class="modal">
           <div class="modal-header">
-            <h3>Details for ${selectedDate}</h3>
+            <h3>Details for ${formattedDate}</h3>
             <span class="close-button">&times;</span>
           </div>
           <div class="modal-body">
-            <p><strong>Total Gaming Time:</strong> ${totalGamingTime.toFixed(2)} hours (${gamingPercentage}%)</p>
-            <p><strong>Total Study Time:</strong> ${totalStudyTime.toFixed(2)} hours (${studyPercentage}%)</p>
+            <p><strong>Total Gaming Time:</strong> ${totalGamingTimeFormatted} (${gamingPercentage}%)</p>
+            <p><strong>Total Study Time:</strong> ${totalStudyTimeFormatted} (${studyPercentage}%)</p>
           </div>
         </div>
       </div>
     `;
   
-    console.log("Appending modal content:", modalContent);
-    $("body").append(modalContent);
-    console.log("Modal appended to body.");
-      
-    $(".modal-overlay").remove();
     $("body").append(modalContent);
   
     $(".close-button, .modal-overlay").click(function () {
@@ -93,8 +103,8 @@ $(document).ready(function () {
     const yearDropdown = $("#yearDropdown");
     yearDropdown.empty();
 
-    const startYear = currentYear - 10; 
-    const endYear = currentYear + 10; 
+    const startYear = currentYear - 10;
+    const endYear = currentYear + 10;
 
     for (let year = startYear; year <= endYear; year++) {
       yearDropdown.append(`<option value="${year}" ${year === currentYear ? "selected" : ""}>${year}</option>`);
@@ -115,15 +125,29 @@ $(document).ready(function () {
     });
   }
 
+  function initializeCalendarView() {
+    populateYearDropdown();
+    populateMonthDropdown();
+    currentYear = parseInt($("#yearDropdown").val());
+    currentMonth = parseInt($("#monthDropdown").val());
+    generateCalendar(currentYear, currentMonth);
+  }
+
+  initializeCalendarView();
+
   $("#yearDropdown, #monthDropdown").change(function () {
     currentYear = parseInt($("#yearDropdown").val());
     currentMonth = parseInt($("#monthDropdown").val());
     generateCalendar(currentYear, currentMonth);
   });
 
-  populateYearDropdown();
-  populateMonthDropdown();
-  generateCalendar(currentYear, currentMonth);
+  $("#calendarView").on("show", function () {
+    initializeCalendarView();
+  });
+
+  $("#calendarView").on("click", function () {
+    generateCalendar(currentYear, currentMonth);
+  });
 
   window.generateCalendar = generateCalendar;
 });

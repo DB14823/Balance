@@ -1,12 +1,27 @@
 [
-    {
-      "taskName": "Play Game",
-      "timeSpent": 60,
-      "type": "Gaming Session"
-    },
-    {
-      "taskName": "Study Math",
-      "timeSpent": 120,
-      "type": "Study Session"
-    }
-  ]
+  {
+    "taskName": "Play Game",
+    "timeSpent": 3.5,
+    "type": "Gaming Session"
+  },
+  {
+    "taskName": "Play Game",
+    "timeSpent": 5.2,
+    "type": "Gaming Session"
+  },
+  {
+    "taskName": "Play Game",
+    "timeSpent": 7.5,
+    "type": "Gaming Session"
+  },
+  {
+    "taskName": "Study Math",
+    "timeSpent": 2,
+    "type": "Study Session"
+  },
+  {
+    "taskName": "Study Math",
+    "timeSpent": 3,
+    "type": "Study Session"
+  }
+]
