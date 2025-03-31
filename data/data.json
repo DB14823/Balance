@@ -1,27 +1,32 @@
 [
   {
-    "taskName": "Play Game",
-    "timeSpent": 3.5,
-    "type": "Gaming Session"
+    "taskName": "Play Game 1",
+    "timeSpent": 3600,
+    "type": "Gaming Session",
+    "date": "2025-03-01"
   },
   {
-    "taskName": "Play Game",
-    "timeSpent": 5.2,
-    "type": "Gaming Session"
+    "taskName": "Play Game 2",
+    "timeSpent": 2600,
+    "type": "Gaming Session",
+    "date": "2025-03-01"
   },
   {
-    "taskName": "Play Game",
-    "timeSpent": 7.5,
-    "type": "Gaming Session"
+    "taskName": "Play Game 3",
+    "timeSpent": 1324,
+    "type": "Gaming Session",
+    "date": "2025-03-01"
   },
   {
-    "taskName": "Study Math",
-    "timeSpent": 2,
-    "type": "Study Session"
+    "taskName": "Study Math 1",
+    "timeSpent": 2450,
+    "type": "Study Session",
+    "date": "2025-03-01"
   },
   {
-    "taskName": "Study Math",
-    "timeSpent": 3,
-    "type": "Study Session"
+    "taskName": "Study Math 2",
+    "timeSpent": 5550,
+    "type": "Study Session",
+    "date": "2025-03-01"
   }
 ]

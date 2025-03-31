@@ -37,6 +37,8 @@
           <table class="table table-striped table-bordered">
             <thead>
               <tr>
+                <button id="deleteAll" class="btn btn-danger btn-sm">Delete All</button>
+
                 <th>Task Name</th>
                 <th>Time Spent</th>
                 <th>Actions</th>
@@ -66,38 +68,41 @@
           <input type="date" id="datePicker" name="datePicker">
           </select>
         </div>
-        <button class="btn btn-primary mt-3" id="saveToCalendar">Save to Calendar</button>
+        <button class="button-style mt-3" id="saveToCalendar">Save to Calendar</button>
+        <button id="downloadData" class="button-style">Download Data</button>
+        <input type="file" id="uploadData" class="button-style" accept=".json">
       </div>
-    </div>
-
-    <div id="calendarView" style="display: none;">
-      <div class="form-inline mb-3">
-        <label for="yearDropdown" class="mr-2">Year:</label>
-        <select id="yearDropdown" class="form-control mr-3"></select>
-        <label for="monthDropdown" class="mr-2">Month:</label>
-        <select id="monthDropdown" class="form-control"></select>
-      </div>
-      <div id="calendar"></div>
-    </div>
-
-    <div id="addItemView" style="display: none;">
-    
-      <div class="timer-container">
-        <div class="timer-box red-timer" id="startTimer1">Game Time!</div>
-        <button class="pause-timer" id="pauseTimers">Pause Both Timers</button>
-        <div class="timer-box green-timer" id="startTimer2">Study Time!</div>
-      </div>
-      <div id="timerDisplay1">00:00:00</div>
-      <div id="timerDisplay2">00:00:00</div>
-      <button class="save-game" id="saveGameTime">Save Game Time</button>
-      <button class="save-study" id="saveStudyTime">Save Study Time</button>
     </div>
   </div>
 
+  <div id="calendarView" style="display: none;">
+    <div class="form-inline mb-3">
+      <label for="yearDropdown" class="mr-2">Year:</label>
+      <select id="yearDropdown" class="form-control mr-3"></select>
+      <label for="monthDropdown" class="mr-2">Month:</label>
+      <select id="monthDropdown" class="form-control"></select>
+    </div>
+    <div id="calendar"></div>
+  </div>
+
+  <div id="addItemView" style="display: none;">
+
+    <div class="timer-container">
+      <div class="timer-box red-timer" id="startTimer1">Game Time!</div>
+      <button class="pause-timer" id="pauseTimers">Pause Both Timers</button>
+      <div class="timer-box green-timer" id="startTimer2">Study Time!</div>
+    </div>
+    <div id="timerDisplay1">00:00:00</div>
+    <div id="timerDisplay2">00:00:00</div>
+    <button class="save-game" id="saveGameTime">Save Game Time</button>
+    <button class="save-study" id="saveStudyTime">Save Study Time</button>
+  </div>
+  </div>
+
+  <script src="js/timer.js"></script>
   <script src="js/main.js"></script>
   <script src="js/calendar.js"></script>
   <script src="js/sidebar.js"></script>
-  <script src="js/timer.js"></script>
 </body>
 
 </html>

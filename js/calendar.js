@@ -1,7 +1,13 @@
 $(document).ready(function () {
   let currentYear = new Date().getFullYear();
   let currentMonth = new Date().getMonth();
-
+  function normalizeDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
   function generateCalendar(year, month) {
     const calendar = $("#calendar");
     calendar.empty();
@@ -18,82 +24,82 @@ $(document).ready(function () {
       calendar.append(`<div class="day empty"></div>`);
     }
 
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
     for (let day = 1; day <= daysInMonth; day++) {
-      const formattedDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      calendar.append(`<div class="day" data-date="${formattedDate}">${day}</div>`);
+      const formattedDate = normalizeDate(`${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`);
+
+      const tasksForDay = tasks.filter(task => task.date === formattedDate);
+
+      const hasDataClass = tasksForDay.length > 0 ? "has-data" : "";
+      const taskSummary = tasksForDay.map(task => `<div>${task.taskName} (${task.type})</div>`).join("");
+
+      calendar.append(`
+        <div class="day ${hasDataClass}" data-date="${formattedDate}">
+          <div class="day-number">${day}</div>
+        </div>
+      `);
     }
 
-    const totalCells = firstDayOfMonth + daysInMonth;
-    const remainingCells = 7 - (totalCells % 7);
-    if (remainingCells < 7) {
-      for (let i = 0; i < remainingCells; i++) {
-        calendar.append(`<div class="day empty"></div>`);
+    $("#calendar").off("click", ".day").on("click", ".day", function () {
+      if (!$(this).hasClass("header") && !$(this).hasClass("empty")) {
+        const selectedDate = $(this).data("date");
+        showDayDetails(selectedDate);
       }
-    }
-
-    $(".day").not(".header").not(".empty").click(function () {
-      const selectedDate = $(this).data("date");
-      showDayDetails(selectedDate);
     });
   }
-
-  function showDayDetails(selectedDate) {
+  function showDayDetails(selectedDay) {
     const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    const tasksForDay = tasks.filter(task => task.deadline === selectedDate);
+    const tasksForSelectedDay = tasks.filter(task => task.date === selectedDay);
+
     let totalGamingTime = 0;
     let totalStudyTime = 0;
-  
-    tasksForDay.forEach(task => {
+
+    tasksForSelectedDay.forEach(task => {
       if (task.type === "Gaming Session") {
         totalGamingTime += parseFloat(task.timeSpent);
       } else if (task.type === "Study Session") {
         totalStudyTime += parseFloat(task.timeSpent);
       }
     });
-  
-    if (tasksForDay.length === 0) {
-      alert(`No data has been saved for ${selectedDate}.`);
+
+    if (tasksForSelectedDay.length === 0) {
+      alert(`No data has been saved for day ${selectedDay}.`);
       return;
     }
-  
-    const formatTime = (decimalTime) => {
-      const hours = Math.floor(decimalTime);
-      const minutes = Math.round((decimalTime - hours) * 60);
-      return `${hours} hours and ${minutes} minutes`;
+
+    const formatTime = (totalSeconds) => {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = Math.floor(totalSeconds % 60); 
+      return `${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
     };
-  
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return date.toLocaleDateString(undefined, options);
-    };
-  
-    const totalGamingTimeFormatted = formatTime(totalGamingTime);
-    const totalStudyTimeFormatted = formatTime(totalStudyTime);
-  
-    const totalTime = totalGamingTime + totalStudyTime;
-    const gamingPercentage = totalTime > 0 ? ((totalGamingTime / totalTime) * 100).toFixed(2) : 0;
-    const studyPercentage = totalTime > 0 ? ((totalStudyTime / totalTime) * 100).toFixed(2) : 0;
-  
-    const formattedDate = formatDate(selectedDate);
-  
+
     const modalContent = `
       <div class="modal-overlay">
         <div class="modal">
           <div class="modal-header">
-            <h3>Details for ${formattedDate}</h3>
+            <h3>Details for ${selectedDay}</h3>
             <span class="close-button">&times;</span>
           </div>
           <div class="modal-body">
-            <p><strong>Total Gaming Time:</strong> ${totalGamingTimeFormatted} (${gamingPercentage}%)</p>
-            <p><strong>Total Study Time:</strong> ${totalStudyTimeFormatted} (${studyPercentage}%)</p>
+            <p><strong>Total Gaming Time:</strong> ${formatTime(totalGamingTime)}</p>
+            <p><strong>Total Study Time:</strong> ${formatTime(totalStudyTime)}</p>
+            <h4>Task Details:</h4>
+            <ul>
+              ${tasksForSelectedDay.map(task => `
+                <li>
+                  <strong>${task.taskName}</strong> (${task.type}): ${formatTime(task.timeSpent)}
+                </li>
+              `).join("")}
+            </ul>
           </div>
         </div>
       </div>
     `;
-  
+
     $("body").append(modalContent);
-  
+
     $(".close-button, .modal-overlay").click(function () {
       $(".modal-overlay").remove();
     });
